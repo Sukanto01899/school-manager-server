@@ -8,12 +8,14 @@
     "start-dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "<Suknto01899>",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongodb": "^5.0.0"
-  }
+    "mongodb": "^5.0.0",
+    "yarn": "^1.22.19"
+  },
+  "repository": "https://github.com/Sukanto01899/school-manager-server.git"
 }
