@@ -23,15 +23,17 @@ async function run(){
         const books = database.collection('books');
         const blogs = database.collection('blogs');
 
-        app.post('/student', (req, res)=>{
+        app.post('/student',async (req, res)=>{
             const student = req.body;
+            const result = await students.insertOne(student)
+            console.log(result)
+            res.send(result)
         })
 
         app.get('/students', async (req, res)=>{
             const query = {};
             const cursor = students.find(query);
             const all_students = await cursor.toArray()
-            console.log('jkfs')
             res.send(all_students)
         })
     }
