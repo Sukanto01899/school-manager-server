@@ -41,7 +41,12 @@ async function run(){
             res.send()
         })
 
-        app.delete('/student/:id', (res, req)=>{})
+        app.delete('/student/:id',async (res, req)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)}
+            const result = await students.deleteOne(query)
+            res.send(result)
+        })
 
         app.get('/student/:id', async (req, res)=>{
             const id = req.params.id;
