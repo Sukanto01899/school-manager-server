@@ -1,7 +1,7 @@
 const express = require('express');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 const app = express()
 
@@ -30,29 +30,52 @@ async function run(){
         })
 
         app.get('/students', async (req, res)=>{
+            const students_limit = parseInt(req.query.total);
+            const pages_count = parseInt(req.query.page);
             const query = {};
-            const cursor = students.find(query);
-            const all_students = await cursor.toArray()
-            res.send(all_students)
+            const cursor = students.find(query).skip(students_limit * pages_count).limit(students_limit);
+            const all_students = await cursor.toArray();
+            const estimate = await students.estimatedDocumentCount();
+            res.send({all_students , estimate})
         })
 
-        app.put('/student/:id', (res, req)=>{
-            console.log(req.params.id)
-            res.send()
+        app.put('/student/:id',async (req, res)=>{
+            const filter = {_id: new ObjectId(req.params.id)};
+            const {firstName,lastName,gender,dob,roll,bloodGroup,stuClass,section,admissionID,phone,address,parentName,img} = req.body
+            const option = {upsert: true}
+            const updateDoc = {
+                $set: {
+                    firstName,
+                    lastName,
+                    gender,
+                    dob,
+                    roll,
+                    bloodGroup,
+                    stuClass,
+                    section,
+                    admissionID,
+                    phone,
+                    address,
+                    parentName,
+                    img
+                }
+            }
+            const result = await students.updateOne(filter, updateDoc, option)
+            res.send(result)
         })
 
-        app.delete('/student/:id',async (res, req)=>{
+        app.delete('/student/:id',async (req, res)=>{
             const id = req.params.id;
-            const query = {_id: ObjectId(id)}
+            const query = {_id: new ObjectId(id)}
             const result = await students.deleteOne(query)
             res.send(result)
         })
 
         app.get('/student/:id', async (req, res)=>{
             const id = req.params.id;
-            const query = {_id: ObjectId(id)}
-            const result = students.findOne(query)
-            console.log(result)
+            const query = {_id: new ObjectId(id)};
+            const result = await students.findOne(query);
+            // console.log(result)
             res.send(result)
         })
 
