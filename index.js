@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 const app = express()
 
@@ -34,6 +34,21 @@ async function run(){
             const cursor = students.find(query);
             const all_students = await cursor.toArray()
             res.send(all_students)
+        })
+
+        app.put('/student/:id', (res, req)=>{
+            console.log(req.params.id)
+            res.send()
+        })
+
+        app.delete('/student/:id', (res, req)=>{})
+
+        app.get('/student/:id', async (req, res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)}
+            const result = students.findOne(query)
+            console.log(result)
+            res.send(result)
         })
 
         // Teacher
